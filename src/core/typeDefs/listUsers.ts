@@ -47,6 +47,7 @@ export class SearchUser extends Pagination {
   @Field((type) => SortableUserColumns, {
     defaultValue: SortableUserColumns.UPDATED_AT,
   })
+  
   @IsEnum(SortableUserColumns)
   sort?: SortableUserColumns;
 

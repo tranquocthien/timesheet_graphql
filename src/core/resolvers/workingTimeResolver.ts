@@ -58,13 +58,13 @@ export class WorkingTimeResolver {
         return this.workingTimeService.getListWorkingTimes(listWorkingTimesQuery)
     }
 
-    // @Mutation(() => [WorkingTimeType])
-    // async searchWorkingTime(
-    //     @Arg('searchWorkingTime') searchWorkingTime: SearchWorkingTime
-    // ): Promise<any> {
-    //     console.log(searchWorkingTime)
-    //     return this.workingTimeService.getAllWorkingTimes(searchWorkingTime);
-    // }
+    @Query(() => [WorkingTimeType])
+    async searchWorkingTime(
+        @Args() searchWorkingTime: SearchWorkingTime
+    ): Promise<any> {
+        console.log(searchWorkingTime)
+        return this.workingTimeService.searchWorkingTimes(searchWorkingTime);
+    }
 
 
 

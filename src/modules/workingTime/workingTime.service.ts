@@ -12,6 +12,7 @@ import {
 } from './../../core/typeDefs/workingTimeTypes';
 import { ERROR_CODE } from '../../core/constants/errorMessage';
 import { isUUID } from 'class-validator';
+
 @Service()
 export class WorkingTimeService {
     constructor(
@@ -57,39 +58,39 @@ export class WorkingTimeService {
     //         });
     // }
 
-    async getListWorkingTimes(listWorkingTimes: ListWorkingTimesQuery): Promise<any> {
-        console.log(listWorkingTimes)
-        const { limit, offset } = listWorkingTimes
-        const result =  await WorkingTimeModel.select('*').limit(limit).offset(offset)
-        console.log(result)
+    async getListWorkingTimes(listWorkingTimes: ListWorkingTimesQuery): Promise<WorkingTimeType[]> {
+        const limit = listWorkingTimes.limit ? Number(listWorkingTimes.limit) : 10;
+        const offset = listWorkingTimes.offset ? Number(listWorkingTimes.offset) : 0;
+
+        const result = await WorkingTimeModel.select('*').limit(limit).offset(offset)
         return result
     }
 
-    async getAllWorkingTimes(searchWorkingTime: SearchWorkingTime) {
+    async searchWorkingTimes(searchWorkingTime: SearchWorkingTime): Promise<WorkingTimeType[]> {
+
         const hasFilter = searchWorkingTime != null;
-        const limit = hasFilter ? searchWorkingTime.limit : 10;
-        const offset = hasFilter ? searchWorkingTime.offset : 0;
-        const sort = hasFilter ? searchWorkingTime.sort : 'updated_at';
+        const limit = hasFilter ? Number(searchWorkingTime.limit) : 10;
+        const offset = hasFilter ? Number(searchWorkingTime.offset) : 0;
+        const order = hasFilter ? searchWorkingTime.order : 'desc';
+        const sort = 'created_at';
 
-        const workingTimes = await WorkingTimeModel.clone()
-            .select()
-            .offset(offset)
+        const workingTimes = WorkingTimeModel.clone()
+            .select('*')
             .limit(limit)
-        if (
-            hasFilter &&
-            searchWorkingTime.keyword &&
-            searchWorkingTime.keyword.trim() !== '' &&
-            searchWorkingTime.searchOn
-        ) {
-            const likeWhere = searchWorkingTime.searchOn
-                .map((field) => `${field} LIKE ?`)
-                .join(' OR ');
-            const searchKeywork = ['%', searchWorkingTime.keyword, '%'].join('');
+            .offset(offset)
+             .orderBy(`${sort}`, `${order}`);
+        if (hasFilter && searchWorkingTime.keyword && searchWorkingTime.keyword.trim() !== '' && searchWorkingTime.searchOn) {
+            const likeWhere = searchWorkingTime.searchOn.map((field) => `${field} LIKE ?`).join(' OR ');
+            const searchKeywork = ['%', searchWorkingTime.keyword.trim(), '%'].join('');
             const bindings = searchWorkingTime.searchOn.map(() => searchKeywork);
-
-            //   workingTimes.whereRaw(likeWhere, bindings);
+            workingTimes.whereRaw(likeWhere, bindings);
         }
-
+          return workingTimes.then((result) => {
+            return result.map((item) => {
+                console.log(item)
+              return new WorkingTimeType(item);
+            });
+         });
     }
 
     async changeStatus() {

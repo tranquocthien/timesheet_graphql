@@ -3,40 +3,48 @@ import { ArgsType, Field, registerEnumType } from 'type-graphql';
 import { Pagination } from './pagination';
 
 enum SearchableColumns {
-    NAME = 'name',
-    UID = 'uid',
-    EMAIL = 'email',
-    STATUS = 'status',
-    CREATED_AT = 'created_at'
+    WORKING_TIME_NAME = 'working_time_name',
+    EMAIL = 'email'
 }
 
-enum SortableWorkingTimeColumns {
-    NAME = 'name',
-    EMAIL = 'email',
-    CREATED_AT = 'created_at',
-    UPDATED_AT = 'updated_at',
-    STATUS = 'status',
+enum Order {
+    DESC = 'DESC',
+    ASC = 'ASC',
 }
+
+// enum SortableWorkingTimeColumns {
+//     WORKING_TIME_NAME = 'working_time_name',
+//     EMAIL = 'email',
+//     STATUS = 'status',
+//     CREATED_AT = 'created_at'
+// }
 
 @ArgsType()
 export class ListWorkingTimesQuery extends Pagination {
 
 }
 
+registerEnumType(SearchableColumns, {
+    name: 'SearchableWorkingTimes',
+    description: 'The working time columns can search on',
+});
+
+registerEnumType(Order, {
+    name: 'OrderWorkingTimes',
+    description: 'Query order value',
+});
 
 @ArgsType()
 export class SearchWorkingTime extends Pagination {
-    @Field({ nullable: true })
+    @Field({ nullable: false })
     keyword?: string;
 
     @Field((type) => [SearchableColumns], {
-        defaultValue: [SearchableColumns.NAME],
+        defaultValue: [SearchableColumns.WORKING_TIME_NAME],
     })
     searchOn?: [string];
 
-    @Field((type) => SortableWorkingTimeColumns, {
-        defaultValue: SortableWorkingTimeColumns.UPDATED_AT,
-    })
-    @IsEnum(SortableWorkingTimeColumns)
-    sort?: SortableWorkingTimeColumns;
+    @Field((type) => Order, { defaultValue: Order.DESC })
+    @IsEnum(Order)
+    order?: Order;
 }
