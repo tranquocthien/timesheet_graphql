@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package project_user;
+
+service User {
+  rpc GetRole (GetRoleRequest) returns (GetRoleResponse) {}
+}
+
+// The request message containing the slice of user's uid
+message GetRoleRequest {
+  repeated string pmUid = 1;
+}
+
+message GetRoleResponse {
+  map<string,string> mapUidUserName = 1;
+}
