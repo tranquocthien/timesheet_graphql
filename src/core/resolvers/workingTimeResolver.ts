@@ -1,3 +1,4 @@
+import { Pagination } from './../typeDefs/pagination';
 import { WorkingTimeService } from './../../modules/workingTime/workingTime.service';
 import {
     WorkingTimeType,
@@ -39,6 +40,11 @@ export class WorkingTimeResolver {
     }
 
     @Mutation(() => Boolean)
+    async inactiveWorkingTime(@Arg('working_time_id') working_time_id: string): Promise<boolean> {
+        return this.workingTimeService.inactiveWorkingTime(working_time_id);
+    }
+
+    @Mutation(() => Boolean)
     async renameWorkingTime(@Arg('renameWorkingTimeInput') renameWorkingTimeInput: RenameWorkingTimeInput): Promise<boolean> {
         return this.workingTimeService.renameWorkingTime(renameWorkingTimeInput);
     }
@@ -64,6 +70,12 @@ export class WorkingTimeResolver {
     ): Promise<any> {
         console.log(searchWorkingTime)
         return this.workingTimeService.searchWorkingTimes(searchWorkingTime);
+    }
+
+    @Query(() => [WorkingTimeType])
+    async listWorkingDays(@Args() pagination: Pagination): Promise<WorkingTimeType[]> {
+
+        return this.workingTimeService.getListWorkingTimes(pagination)
     }
 
 

@@ -1,4 +1,3 @@
-import { SearchWorkingTime } from '../../core/typeDefs/listWorkingTimes';
 import { HttpStatus, InvalidInputError } from '../../core/constants/errors';
 import { Service } from 'typedi';
 import WorkingTimeModel, { IWorkingTime } from '../../core/models/workingTimeModel';
@@ -25,13 +24,71 @@ export class WorkingTimeRepo {
         return WorkingTimeModel.clone().where('uid', uid).first();
     }
 
-    async addNew(working_time_id: string, working_time_name: string, email: string, status: boolean) {
+    async addNew(working_time_id: string, 
+        working_time_name: string, 
+        user_email: string, 
+        status: boolean, 
+        check_in: string,
+        check_out: string,
+        lunchbreak_start: string,
+        lunchbreak_end: string
+        ) {
         return await WorkingTimeModel.clone()
             .insert({
                 working_time_id,
                 working_time_name,
-                email,
-                status
+                user_email,
+                status,
+                monday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: true
+                },
+                tuesday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: true
+                },
+                wednesday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: true
+                },
+                thursday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: true
+                },
+                friday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: true
+                },
+                saturday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: false
+                },
+                sunday: {
+                    check_in: check_in,
+                    check_out: check_out,
+                    lunchbreak_start: lunchbreak_start,
+                    lunchbreak_end: lunchbreak_end,
+                    is_open: false
+                }
+
             })
             .returning('*');
     }
@@ -49,7 +106,7 @@ export class WorkingTimeRepo {
         return await WorkingTimeModel.clone()
             .where('working_time_id', '=', id)
             .update({
-                working_time_name:working_time_name
+                working_time_name: working_time_name
             });
     }
 
@@ -63,21 +120,6 @@ export class WorkingTimeRepo {
     //         });
     // }
 
-    // async getAllWorkingTimes(limit: number, offset: number, sort: string, keyword: string, searchOn: any){
-
-    //     const workingTimes = await WorkingTimeModel.clone()
-    //       .select()
-    //       .offset(offset)
-    //       .limit(limit)
-    //     if (keyword && keyword.trim() !== '' && searchOn) {
-    //       const likeWhere = searchOn.map((field) => `${field} LIKE ?`).join(' OR ');
-    //       const searchKeywork = ['%', keyword, '%'].join('');
-    //       const bindings = searchOn.map(() => searchKeywork);
-
-    //       workingTimes.whereRaw(likeWhere, bindings);
-    //     }
-
-    // }
 
     async changeStatus() {
 

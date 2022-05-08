@@ -24,6 +24,7 @@ export class ListWorkingTimesQuery extends Pagination {
 
 }
 
+
 registerEnumType(SearchableColumns, {
     name: 'SearchableWorkingTimes',
     description: 'The working time columns can search on',
