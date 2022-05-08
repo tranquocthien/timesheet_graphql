@@ -36,13 +36,11 @@ export class WorkingTimeResolver {
     }
 
     @Mutation(() => Boolean)
-    async activeWorkingTime(@Arg('working_time_id') working_time_id: string): Promise<boolean> {
-        return this.workingTimeService.activeWorkingTime(working_time_id);
-    }
-
-    @Mutation(() => Boolean)
-    async inactiveWorkingTime(@Arg('working_time_id') working_time_id: string): Promise<boolean> {
-        return this.workingTimeService.inactiveWorkingTime(working_time_id);
+    async updateWorkingTimeStatus(
+        @Arg('working_time_id') working_time_id: string,
+        @Arg('status') status: boolean
+    ): Promise<boolean> {
+        return this.workingTimeService.updateWorkingTimeStatus(working_time_id, status);
     }
 
     @Mutation(() => Boolean)
@@ -50,19 +48,10 @@ export class WorkingTimeResolver {
         return this.workingTimeService.renameWorkingTime(renameWorkingTimeInput);
     }
 
-    // @Mutation(() => Boolean)
-    // async editWorkingTime(@Arg('editWorkingTimeInput') editWorkingTimeInput: EditWorkingTimeInput): Promise<WorkingTimeType> {
-    //     return this.workingTimeService.editWorkingTime(editWorkingTimeInput);
-    // }
-
-
-    // @Mutation(() => WorkingTimeType)
-    // async changeWorkingTime(
-    //     @Arg('changeWorkingTimeInput') changeWorkingTimeInput: ChangeWorkingTimeInput
-    // ): Promise<WorkingTimeType> {
-    //     console.log(changeWorkingTimeInput)
-    //     return this.workingTimeService.changeWorkingTime(changeWorkingTimeInput);
-    // }
+    @Mutation(() => WorkingTimeType )
+    async editWorkingTime(@Arg("editWorkingTimeInput") editWorkingTimeInput: EditWorkingTimeInput): Promise<WorkingTimeType> {
+        return this.workingTimeService.editWorkingTime(editWorkingTimeInput);
+    }
 
     @Query(() => [WorkingTimeType])
     async listWorkingTimes(@Args() listWorkingTimesQuery: ListWorkingTimesQuery): Promise<WorkingTimeType[]> {
@@ -83,9 +72,6 @@ export class WorkingTimeResolver {
 
         return this.workingTimeService.getListWorkingTimes(pagination)
     }
-
-
-
 
 
 }

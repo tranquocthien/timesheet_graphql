@@ -8,22 +8,23 @@ import { RoleType } from './roleTypes';
 
 @ObjectType()
 export class TimeType {
-  @Field()
-  check_in!: string;
+    @Field()
+    check_in!: string;
 
-  @Field()
-  check_out!: string;
+    @Field()
+    check_out!: string;
 
-  @Field()
-  lunchbreak_start!: string;
+    @Field()
+    lunchbreak_start!: string;
 
-  @Field()
-  lunchbreak_end!: string;
+    @Field()
+    lunchbreak_end!: string;
 
-  @Field()
-  is_open!: boolean;
+    @Field()
+    is_open!: boolean;
 
 }
+
 
 @InputType()
 export class CreateWorkingTimeInput {
@@ -52,6 +53,26 @@ export class RenameWorkingTimeInput {
 
 }
 
+
+@InputType()
+export class InputTimeType {
+    @Field()
+    check_in!: string;
+
+    @Field()
+    check_out!: string;
+
+    @Field()
+    lunchbreak_start!: string;
+
+    @Field()
+    lunchbreak_end!: string;
+
+    @Field()
+    is_open!: boolean;
+
+}
+
 @InputType()
 export class EditWorkingTimeInput {
 
@@ -59,26 +80,26 @@ export class EditWorkingTimeInput {
     @IsNotEmpty()
     working_time_id!: string;
 
-    @Field(() => TimeType)
-    monday!: TimeType;
+    @Field((type) => InputTimeType, { nullable: true })
+    monday?: InputTimeType;
 
-    @Field(() => TimeType)
-    tuesday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    tuesday?: InputTimeType;
 
-    @Field(() => TimeType)
-    wednesday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    wednesday?: InputTimeType;
 
-    @Field(() => TimeType)
-    thursday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    thursday?: InputTimeType;
 
-    @Field(() => TimeType)
-    friday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    friday?: InputTimeType;
 
-    @Field(() => TimeType)
-    saturday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    saturday?: InputTimeType;
 
-    @Field(() => TimeType)
-    sunday!: TimeType;
+    @Field(() => InputTimeType, { nullable: true })
+    sunday?: InputTimeType;
 
 }
 
@@ -140,15 +161,15 @@ export class WorkingTimeType {
 
     constructor(workingTime: IWorkingTime) {
         this.working_time_id = workingTime.working_time_id,
-        this.working_time_name = workingTime.working_time_name;
+            this.working_time_name = workingTime.working_time_name;
         this.user_email = workingTime.user_email,
-        this.status = workingTime.status,
-        this.monday = workingTime.monday,
-        this.tuesday = workingTime.tuesday,
-        this.wednesday = workingTime.wednesday,
-        this.thursday =workingTime.thursday,
-        this.friday =  workingTime.friday,
-        this.saturday = workingTime.saturday,
-        this.sunday = workingTime.sunday
+            this.status = workingTime.status,
+            this.monday = workingTime.monday,
+            this.tuesday = workingTime.tuesday,
+            this.wednesday = workingTime.wednesday,
+            this.thursday = workingTime.thursday,
+            this.friday = workingTime.friday,
+            this.saturday = workingTime.saturday,
+            this.sunday = workingTime.sunday
     }
 }

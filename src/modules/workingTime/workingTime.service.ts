@@ -25,10 +25,10 @@ export class WorkingTimeService {
     async createWorkingTime(createWorkingTimeInput: CreateWorkingTimeInput): Promise<WorkingTimeType> {
         const working_time_id = uuid()
         const { user_email, working_time_name } = createWorkingTimeInput;
-        const check_in: string = "08:00"
-        const check_out: string = "18:00"
-        const lunchbreak_start: string = "12:00"
-        const lunchbreak_end: string= "13:30"
+        const check_in: string = "08:00";
+        const check_out: string = "18:00";
+        const lunchbreak_start: string = "12:00";
+        const lunchbreak_end: string= "13:30";
 
         const status: boolean = false;
 
@@ -45,22 +45,23 @@ export class WorkingTimeService {
         return newWorkingTime[0];
     }
 
-    async activeWorkingTime(working_time_id: string) {
-        const status: boolean = true
+    async updateWorkingTimeStatus(working_time_id: string, status: boolean) {
+        const existingWorkingTime = await this.workingTimeRepo.getByWorkingTimeId(working_time_id);
+        if(!existingWorkingTime){
+            throw new InvalidInputError(ERROR_CODE.WORKING_TIME_NOT_FOUND);
+        }
         await this.workingTimeRepo.updateStatus(working_time_id, status)
-        return true
-    }
-
-    async inactiveWorkingTime(working_time_id: string) {
-        const status: boolean = false
-        await this.workingTimeRepo.updateStatus(working_time_id, status)
-        return true
+        return true;
     }
 
     async renameWorkingTime(renameWorkingTimeInput: RenameWorkingTimeInput): Promise<boolean> {
         const { working_time_id, new_name } = renameWorkingTimeInput
-        await this.workingTimeRepo.updateName(working_time_id, new_name)
-        return true
+        const existingWorkingTime = await this.workingTimeRepo.getByWorkingTimeId(working_time_id);
+        if(!existingWorkingTime){
+            throw new InvalidInputError(ERROR_CODE.WORKING_TIME_NOT_FOUND);
+        }
+        let result = await this.workingTimeRepo.updateName(working_time_id, new_name);
+        return result
     }
 
     async getListWorkingTimes(listWorkingTimes: ListWorkingTimesQuery): Promise<WorkingTimeType[]> {
@@ -72,7 +73,6 @@ export class WorkingTimeService {
     }
 
     async searchWorkingTimes(searchWorkingTime: SearchWorkingTime): Promise<WorkingTimeType[]> {
-
         const hasFilter = searchWorkingTime != null;
         const limit = hasFilter ? Number(searchWorkingTime.limit) : 10;
         const offset = hasFilter ? Number(searchWorkingTime.offset) : 0;
@@ -98,25 +98,14 @@ export class WorkingTimeService {
         });
     }
 
-    async editWorkingTime(editWorkingTimeInput: EditWorkingTimeInput): Promise<any>{
-        const result = await this.workingTimeRepo.updateWorkingTimeByWorkingTimeId(editWorkingTimeInput)
-
+    async editWorkingTime(editWorkingTimeInput: EditWorkingTimeInput): Promise<WorkingTimeType>{
+        console.log(editWorkingTimeInput)
+        const existingWorkingTime = await this.workingTimeRepo.getByWorkingTimeId(editWorkingTimeInput.working_time_id);
+        if(!existingWorkingTime){
+            throw new InvalidInputError(ERROR_CODE.WORKING_TIME_NOT_FOUND);
+        }
+         let result = await this.workingTimeRepo.updateWorkingTimeByWorkingTimeId(editWorkingTimeInput)
+         return result[0]
     }
 
-    async changeStatus() {
-
-    }
-
-    // async changeWorkingTime(changeWorkingTimeInput: ChangeWorkingTimeInput): Promise<WorkingTimeType> {
-    //     const existingWorkingTime = await this.workingTimeRepo.getByUid(changeWorkingTimeInput.wt_id);
-    //     if (!existingWorkingTime) {
-    //         throw new InvalidInputError(ERROR_CODE.WORKING_TIME_NOT_FOUND);
-    //     };
-    //     return await WorkingTimeModel.clone()
-    //         .where('wt_id', '=', changeWorkingTimeInput.wt_id)
-    //         .update({
-    //             check_in: changeWorkingTimeInput.check_in,
-    //             check_out: changeWorkingTimeInput.check_out
-    //         });
-    // }
 }

@@ -21,8 +21,8 @@ export class WorkingTimeRepo {
         return WorkingTimeModel.clone().where('id', id).first();
     }
 
-    async getByUid(uid: string): Promise<any | undefined> {
-        return WorkingTimeModel.clone().where('uid', uid).first();
+    async getByWorkingTimeId(uid: string): Promise<any | undefined> {
+        return WorkingTimeModel.clone().where('working_time_id', uid).first();
     }
 
     async addNew(working_time_id: string, 
@@ -113,12 +113,12 @@ export class WorkingTimeRepo {
             friday: editWorkingTimeInput.friday,
             saturday: editWorkingTimeInput.saturday,
             sunday: editWorkingTimeInput.sunday
-        });
+        }).returning('*');
 
     }
 
 
-    async updateName(id: string, working_time_name: string) {
+    async updateName(id: string, working_time_name: string): Promise<boolean>{
         return await WorkingTimeModel.clone()
             .where('working_time_id', '=', id)
             .update({
@@ -126,18 +126,4 @@ export class WorkingTimeRepo {
             });
     }
 
-
-    // async changeWorkingTime(name: string, uid: string, email: string, check_in: Date, check_out: Date): Promise<any> {
-    //     return await WorkingTimeModel.clone()
-    //         .where('uid', '=', uid)
-    //         .update({
-    //             check_in: check_in,
-    //             check_out: check_out
-    //         });
-    // }
-
-
-    async changeStatus() {
-
-    }
 }
