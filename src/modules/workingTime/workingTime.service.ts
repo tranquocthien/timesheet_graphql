@@ -9,7 +9,8 @@ import {
     CreateWorkingTimeInput,
     ChangeWorkingTimeInput,
     WorkingTimeType,
-    RenameWorkingTimeInput
+    RenameWorkingTimeInput,
+    EditWorkingTimeInput
 } from './../../core/typeDefs/workingTimeTypes';
 import { ERROR_CODE } from '../../core/constants/errorMessage';
 
@@ -97,7 +98,8 @@ export class WorkingTimeService {
         });
     }
 
-    async editWorkingTime(){
+    async editWorkingTime(editWorkingTimeInput: EditWorkingTimeInput): Promise<any>{
+        const result = await this.workingTimeRepo.updateWorkingTimeByWorkingTimeId(editWorkingTimeInput)
 
     }
 

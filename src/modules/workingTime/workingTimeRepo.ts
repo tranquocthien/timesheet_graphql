@@ -6,7 +6,8 @@ import { RoleService } from '../role/roleService';
 import {
     CreateWorkingTimeInput,
     ChangeWorkingTimeInput,
-    WorkingTimeType
+    WorkingTimeType,
+    EditWorkingTimeInput
 } from './../../core/typeDefs/workingTimeTypes';
 import { ERROR_CODE } from '../../core/constants/errorMessage';
 import { isUUID } from 'class-validator';
@@ -99,6 +100,21 @@ export class WorkingTimeRepo {
             .update({
                 status: status
             });
+    }
+
+    async updateWorkingTimeByWorkingTimeId(editWorkingTimeInput: EditWorkingTimeInput){
+        return await WorkingTimeModel.clone()
+        .where('working_time_id', '=', editWorkingTimeInput.working_time_id)
+        .update({
+            monday: editWorkingTimeInput.monday,
+            tuesday: editWorkingTimeInput.tuesday,
+            wednesday: editWorkingTimeInput.wednesday,
+            thursday: editWorkingTimeInput.thursday,
+            friday: editWorkingTimeInput.friday,
+            saturday: editWorkingTimeInput.saturday,
+            sunday: editWorkingTimeInput.sunday
+        });
+
     }
 
 

@@ -4,6 +4,7 @@ import {
     WorkingTimeType,
     ChangeWorkingTimeInput,
     CreateWorkingTimeInput,
+    EditWorkingTimeInput,
     RenameWorkingTimeInput
 } from './../typeDefs/workingTimeTypes';
 import {
@@ -48,6 +49,11 @@ export class WorkingTimeResolver {
     async renameWorkingTime(@Arg('renameWorkingTimeInput') renameWorkingTimeInput: RenameWorkingTimeInput): Promise<boolean> {
         return this.workingTimeService.renameWorkingTime(renameWorkingTimeInput);
     }
+
+    // @Mutation(() => Boolean)
+    // async editWorkingTime(@Arg('editWorkingTimeInput') editWorkingTimeInput: EditWorkingTimeInput): Promise<WorkingTimeType> {
+    //     return this.workingTimeService.editWorkingTime(editWorkingTimeInput);
+    // }
 
 
     // @Mutation(() => WorkingTimeType)

@@ -5,6 +5,26 @@ import { IUser } from '../models/userModel';
 import { IWorkingTime } from '../models/workingTimeModel';
 import { RoleType } from './roleTypes';
 
+
+@ObjectType()
+export class TimeType {
+  @Field()
+  check_in!: string;
+
+  @Field()
+  check_out!: string;
+
+  @Field()
+  lunchbreak_start!: string;
+
+  @Field()
+  lunchbreak_end!: string;
+
+  @Field()
+  is_open!: boolean;
+
+}
+
 @InputType()
 export class CreateWorkingTimeInput {
 
@@ -32,6 +52,37 @@ export class RenameWorkingTimeInput {
 
 }
 
+@InputType()
+export class EditWorkingTimeInput {
+
+    @Field(() => ID)
+    @IsNotEmpty()
+    working_time_id!: string;
+
+    @Field(() => TimeType)
+    monday!: TimeType;
+
+    @Field(() => TimeType)
+    tuesday!: TimeType;
+
+    @Field(() => TimeType)
+    wednesday!: TimeType;
+
+    @Field(() => TimeType)
+    thursday!: TimeType;
+
+    @Field(() => TimeType)
+    friday!: TimeType;
+
+    @Field(() => TimeType)
+    saturday!: TimeType;
+
+    @Field(() => TimeType)
+    sunday!: TimeType;
+
+}
+
+
 
 @InputType()
 export class ChangeWorkingTimeInput {
@@ -48,28 +99,6 @@ export class ChangeWorkingTimeInput {
     check_out?: Date;
 
 }
-
-
-@ObjectType()
-export class TimeType {
-  @Field()
-  check_in!: string;
-
-  @Field()
-  check_out!: string;
-
-  @Field()
-  lunchbreak_start!: string;
-
-  @Field()
-  lunchbreak_end!: string;
-
-  @Field()
-  is_open!: boolean;
-
-}
-
-
 
 @ObjectType()
 export class WorkingTimeType {
