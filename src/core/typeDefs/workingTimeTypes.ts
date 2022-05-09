@@ -1,175 +1,163 @@
 import { DATE } from '@faker-js/faker/definitions/date';
 import { IsDate, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, ID, InputType, Int, ObjectType } from 'type-graphql';
-import { IUser } from '../models/userModel';
 import { IWorkingTime } from '../models/workingTimeModel';
-import { RoleType } from './roleTypes';
-
 
 @ObjectType()
 export class TimeType {
-    @Field()
-    check_in!: string;
+  @Field()
+  checkIn!: string;
 
-    @Field()
-    check_out!: string;
+  @Field()
+  checkOut!: string;
 
-    @Field()
-    lunchbreak_start!: string;
+  @Field()
+  lunchBreakStart!: string;
 
-    @Field()
-    lunchbreak_end!: string;
+  @Field()
+  lunchBreakEnd!: string;
 
-    @Field()
-    is_open!: boolean;
+  @Field()
+  flexibleTime!: number;
 
+  @Field()
+  isOpen!: boolean;
 }
 
+@InputType()
+export class InputTimeType {
+  @Field()
+  checkIn!: string;
+
+  @Field()
+  checkOut!: string;
+
+  @Field()
+  lunchBreakStart!: string;
+
+  @Field()
+  lunchBreakEnd!: string;
+
+  @Field()
+  flexibleTime!: number;
+
+  @Field()
+  isOpen!: boolean;
+}
 
 @InputType()
 export class CreateWorkingTimeInput {
+  @Field(() => String)
+  @IsNotEmpty()
+  name!: string;
 
-    @Field(() => String)
-    @IsNotEmpty()
-    working_time_name!: string;
-
-    @Field(() => String)
-    @IsNotEmpty()
-    user_email!: string;
-
-
+  @Field(() => Number)
+  @IsNotEmpty()
+  userId!: number;
 }
 
 @InputType()
 export class RenameWorkingTimeInput {
+  @Field(() => ID)
+  @IsNotEmpty()
+  uid!: string;
 
-    @Field(() => ID)
-    @IsNotEmpty()
-    working_time_id!: string;
-
-    @Field(() => String)
-    @IsNotEmpty()
-    new_name!: string;
-
-}
-
-
-@InputType()
-export class InputTimeType {
-    @Field()
-    check_in!: string;
-
-    @Field()
-    check_out!: string;
-
-    @Field()
-    lunchbreak_start!: string;
-
-    @Field()
-    lunchbreak_end!: string;
-
-    @Field()
-    is_open!: boolean;
-
+  @Field(() => String)
+  @IsNotEmpty()
+  newName!: string;
 }
 
 @InputType()
 export class EditWorkingTimeInput {
+  @Field(() => ID)
+  @IsNotEmpty()
+  uid!: string;
 
-    @Field(() => ID)
-    @IsNotEmpty()
-    working_time_id!: string;
+  @Field((type) => InputTimeType, { nullable: true })
+  monday?: InputTimeType;
 
-    @Field((type) => InputTimeType, { nullable: true })
-    monday?: InputTimeType;
+  @Field(() => InputTimeType, { nullable: true })
+  tuesday?: InputTimeType;
 
-    @Field(() => InputTimeType, { nullable: true })
-    tuesday?: InputTimeType;
+  @Field(() => InputTimeType, { nullable: true })
+  wednesday?: InputTimeType;
 
-    @Field(() => InputTimeType, { nullable: true })
-    wednesday?: InputTimeType;
+  @Field(() => InputTimeType, { nullable: true })
+  thursday?: InputTimeType;
 
-    @Field(() => InputTimeType, { nullable: true })
-    thursday?: InputTimeType;
+  @Field(() => InputTimeType, { nullable: true })
+  friday?: InputTimeType;
 
-    @Field(() => InputTimeType, { nullable: true })
-    friday?: InputTimeType;
+  @Field(() => InputTimeType, { nullable: true })
+  saturday?: InputTimeType;
 
-    @Field(() => InputTimeType, { nullable: true })
-    saturday?: InputTimeType;
-
-    @Field(() => InputTimeType, { nullable: true })
-    sunday?: InputTimeType;
-
+  @Field(() => InputTimeType, { nullable: true })
+  sunday?: InputTimeType;
 }
-
-
 
 @InputType()
 export class ChangeWorkingTimeInput {
+  @Field(() => ID)
+  @IsNotEmpty()
+  uid!: string;
 
-    @Field(() => ID)
-    @IsNotEmpty()
-    working_time_id!: string;
+  @Field(() => Date)
+  @IsNotEmpty()
+  checkIn!: Date;
 
-    @Field(() => Date)
-    @IsNotEmpty()
-    check_in!: Date;
-
-    @Field(() => Date)
-    check_out?: Date;
-
+  @Field(() => Date)
+  checkOut?: Date;
 }
 
 @ObjectType()
 export class WorkingTimeType {
+  @Field(() => ID)
+  uid!: string;
 
-    @Field(() => ID)
-    working_time_id!: string;
+  @Field(() => String)
+  @IsEmail()
+  name!: string;
 
-    @Field(() => String)
-    @IsEmail()
-    working_time_name!: string;
+  @Field(() => Number)
+  @IsNotEmpty()
+  @IsEmail()
+  userId!: number;
 
-    @Field(() => String)
-    @IsNotEmpty()
-    user_email!: string;
+  @Field()
+  status: boolean;
 
-    @Field()
-    status: boolean;
+  @Field(() => TimeType)
+  monday: TimeType;
 
-    @Field(() => TimeType)
-    monday: TimeType;
+  @Field(() => TimeType)
+  tuesday: TimeType;
 
-    @Field(() => TimeType)
-    tuesday: TimeType;
+  @Field(() => TimeType)
+  wednesday: TimeType;
 
-    @Field(() => TimeType)
-    wednesday: TimeType;
+  @Field(() => TimeType)
+  thursday: TimeType;
 
-    @Field(() => TimeType)
-    thursday: TimeType;
+  @Field(() => TimeType)
+  friday: TimeType;
 
-    @Field(() => TimeType)
-    friday: TimeType;
+  @Field(() => TimeType)
+  saturday: TimeType;
 
-    @Field(() => TimeType)
-    saturday: TimeType;
+  @Field(() => TimeType)
+  sunday: TimeType;
 
-    @Field(() => TimeType)
-    sunday: TimeType;
-
-    constructor(workingTime: IWorkingTime) {
-        this.working_time_id = workingTime.working_time_id,
-            this.working_time_name = workingTime.working_time_name;
-        this.user_email = workingTime.user_email,
-            this.status = workingTime.status,
-            this.monday = workingTime.monday,
-            this.tuesday = workingTime.tuesday,
-            this.wednesday = workingTime.wednesday,
-            this.thursday = workingTime.thursday,
-            this.friday = workingTime.friday,
-            this.saturday = workingTime.saturday,
-            this.sunday = workingTime.sunday
-    }
+  constructor(workingTime: IWorkingTime) {
+    (this.uid = workingTime.uid),
+      (this.name = workingTime.name),
+      (this.userId = workingTime.userId),
+      (this.status = workingTime.status),
+      (this.monday = workingTime.monday),
+      (this.tuesday = workingTime.tuesday),
+      (this.wednesday = workingTime.wednesday),
+      (this.thursday = workingTime.thursday),
+      (this.friday = workingTime.friday),
+      (this.saturday = workingTime.saturday),
+      (this.sunday = workingTime.sunday);
+  }
 }

@@ -7,7 +7,7 @@ export enum ERROR_MESSAGE {
   USER_IS_NOT_ACTIVE = 'User is not active',
   ROLE_NOT_FOUND = 'Role not found',
   HTTP_STATUS_ERROR = 'Http status error',
-  ROLE_ERROR = 'Role not found'
+  ROLE_ERROR = 'Role not found',
 }
 
 export enum ERROR_CODE {
@@ -20,5 +20,5 @@ export enum ERROR_CODE {
   ROLE_NOT_FOUND = 'ROLE_NOT_FOUND',
   HTTP_STATUS_ERROR = 'HTTP_STATUS_ERROR',
   ROLE_ERROR = 'ROLE_NOT_FOUND',
-  WORKING_TIME_NOT_FOUND = 'WORKING_TIME_NOT_FOUND'
+  WORKING_TIME_NOT_FOUND = 'WORKING_TIME_NOT_FOUND',
 }

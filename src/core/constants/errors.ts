@@ -11,20 +11,25 @@ export class InvalidInputError extends ApolloError {
 
 export class InvalidEmailError extends ApolloError {
   constructor(errorData: any) {
-    super(ERROR_MESSAGE.INVALID_INPUT_EMAIL_ERROR, ERROR_CODE.INVALID_INPUT_EMAIL_ERROR);
+    super(
+      ERROR_MESSAGE.INVALID_INPUT_EMAIL_ERROR,
+      ERROR_CODE.INVALID_INPUT_EMAIL_ERROR
+    );
 
     Object.defineProperty(this, 'name', { value: errorData });
   }
 }
 
 export class InvalidUidError extends ApolloError {
-    constructor(errorData: any) {
-      super(ERROR_MESSAGE.INVALID_INPUT_EMAIL_ERROR, ERROR_CODE.INVALID_INPUT_EMAIL_ERROR);
-  
-      Object.defineProperty(this, 'name', { value: errorData });
-    }
+  constructor(errorData: any) {
+    super(
+      ERROR_MESSAGE.INVALID_INPUT_EMAIL_ERROR,
+      ERROR_CODE.INVALID_INPUT_EMAIL_ERROR
+    );
+
+    Object.defineProperty(this, 'name', { value: errorData });
   }
-  
+}
 
 export class HttpStatus extends ApolloError {
   constructor(errorData: any) {
@@ -41,4 +46,3 @@ export class InvalidRoleError extends ApolloError {
     Object.defineProperty(this, 'name', { value: errorData });
   }
 }
-

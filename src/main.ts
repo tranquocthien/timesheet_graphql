@@ -5,7 +5,7 @@ import express from 'express';
 import http from 'http';
 import { Container } from 'typedi';
 import { buildSchema } from 'type-graphql';
-import { UserResolver, RoleResolver, PersonResolver,WorkingTimeResolver } from './core/resolvers';
+import { WorkingTimeResolver } from './core/resolvers';
 import { PersonAPI } from './dataSources/Person';
 
 const main = async () => {
@@ -13,7 +13,7 @@ const main = async () => {
   const app = express();
   const httpServer = http.createServer(app);
   const graphqlScheme = await buildSchema({
-    resolvers: [UserResolver, RoleResolver, PersonResolver, WorkingTimeResolver],
+    resolvers: [WorkingTimeResolver],
     container: Container,
   });
   const server = new ApolloServer({

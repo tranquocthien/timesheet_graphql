@@ -1,4 +1,4 @@
-import { RoleModel } from '../../core/models';
+import RoleModel from '../../core/models/roleModel';
 import { Service } from 'typedi';
 import { IRole } from 'src/core/models/roleModel';
 

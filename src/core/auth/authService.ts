@@ -29,7 +29,7 @@ export class AuthenticationService {
     };
   }
 
-  public async hashPassword(password: string): Promise<String>{
+  public async hashPassword(password: string): Promise<string> {
     const salt = crypto.randomBytes(10).toString('hex');
     const interations = process.env.INTERATIONS
       ? Number(process.env.INTERATIONS)
@@ -46,7 +46,7 @@ export class AuthenticationService {
         .toString('hex')
     );
   }
-  public async compare(plainPassword: string, hash: string): Promise<Boolean> {
+  public async compare(plainPassword: string, hash: string): Promise<boolean> {
     const interations = process.env.INTERATIONS
       ? Number(process.env.INTERATIONS)
       : 10;
@@ -61,4 +61,3 @@ export class AuthenticationService {
     return verifyPassword == key;
   }
 }
-

@@ -76,25 +76,25 @@ export class UserType {
   @Field()
   email: string;
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   username: string;
 
   @Field()
   role!: RoleType;
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   created_by: string;
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   active: boolean;
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   avatar: string;
 
-  @Field(() => Int, {nullable: true})
+  @Field(() => Int, { nullable: true })
   age: number;
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   address: string;
 
   roleId: string;

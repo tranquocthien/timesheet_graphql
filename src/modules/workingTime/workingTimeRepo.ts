@@ -1,129 +1,166 @@
+import { SearchWorkingTime } from './../../core/typeDefs/listWorkingTimes';
 import { HttpStatus, InvalidInputError } from '../../core/constants/errors';
 import { Service } from 'typedi';
-import WorkingTimeModel, { IWorkingTime } from '../../core/models/workingTimeModel';
-import { AuthenticationService } from '../../core/auth/authService';
-import { RoleService } from '../role/roleService';
+import WorkingTimeModel, {
+  IWorkingTime,
+} from '../../core/models/workingTimeModel';
 import {
-    CreateWorkingTimeInput,
-    ChangeWorkingTimeInput,
-    WorkingTimeType,
-    EditWorkingTimeInput
+  WorkingTimeType,
+  EditWorkingTimeInput,
 } from './../../core/typeDefs/workingTimeTypes';
-import { ERROR_CODE } from '../../core/constants/errorMessage';
-import { isUUID } from 'class-validator';
 
 @Service()
 export class WorkingTimeRepo {
-    constructor(
-    ) { }
+  constructor() {}
 
-    async getById(id: number): Promise<any | undefined> {
-        return WorkingTimeModel.clone().where('id', id).first();
+  async getById(id: number): Promise<any | undefined> {
+    return WorkingTimeModel.clone().where('id', id).first();
+  }
+
+  async getByUid(id: string): Promise<any | undefined> {
+    return WorkingTimeModel.clone().where('uid', id).first();
+  }
+
+  async addNew(
+    uid: string,
+    name: string,
+    userId: number,
+    status: boolean,
+    checkIn: string,
+    checkOut: string,
+    lunchBreakStart: string,
+    lunchBreakEnd: string,
+    flexibleTime: number
+  ) {
+    return await WorkingTimeModel.clone()
+      .insert({
+        uid,
+        name,
+        userId,
+        status,
+        monday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: true,
+        },
+        tuesday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: true,
+        },
+        wednesday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: true,
+        },
+        thursday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: true,
+        },
+        friday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: true,
+        },
+        saturday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: false,
+        },
+        sunday: {
+          checkIn: checkIn,
+          checkOut: checkOut,
+          lunchBreakStart: lunchBreakStart,
+          lunchBreakEnd: lunchBreakEnd,
+          flexibleTime: flexibleTime,
+          isOpen: false,
+        },
+      })
+      .returning('*');
+  }
+
+  async updateStatus(id: string, status: boolean) {
+    return await WorkingTimeModel.clone().where('uid', '=', id).update({
+      status: status,
+      updatedAt: new Date(),
+    });
+  }
+
+  async updateWorkingTimeByUid(editWorkingTimeInput: EditWorkingTimeInput) {
+    return await WorkingTimeModel.clone()
+      .where('uid', '=', editWorkingTimeInput.uid)
+      .update({
+        monday: editWorkingTimeInput.monday,
+        tuesday: editWorkingTimeInput.tuesday,
+        wednesday: editWorkingTimeInput.wednesday,
+        thursday: editWorkingTimeInput.thursday,
+        friday: editWorkingTimeInput.friday,
+        saturday: editWorkingTimeInput.saturday,
+        sunday: editWorkingTimeInput.sunday,
+        updatedAt: new Date(),
+      })
+      .returning('*');
+  }
+
+  async searchWorkingTimes(
+    hasFilter: any,
+    limit: number,
+    offset: number,
+    sort: string,
+    order: string | undefined,
+    searchWorkingTime: SearchWorkingTime
+  ) {
+    const workingTimes = WorkingTimeModel.clone()
+      .select('*')
+      .limit(limit)
+      .offset(offset)
+      .orderBy(`${sort}`, `${order}`);
+    if (
+      hasFilter &&
+      searchWorkingTime.keyword &&
+      searchWorkingTime.keyword.trim() !== '' &&
+      searchWorkingTime.searchOn
+    ) {
+      const likeWhere = searchWorkingTime.searchOn
+        .map((field) => `${field} LIKE ?`)
+        .join(' OR ');
+      const searchKeywork = ['%', searchWorkingTime.keyword.trim(), '%'].join(
+        ''
+      );
+      const bindings = searchWorkingTime.searchOn.map(() => searchKeywork);
+      workingTimes.whereRaw(likeWhere, bindings);
     }
+    return workingTimes.then((result) => {
+      return result.map((item) => {
+        console.log(item);
+        return new WorkingTimeType(item);
+      });
+    });
+  }
 
-    async getByWorkingTimeId(uid: string): Promise<any | undefined> {
-        return WorkingTimeModel.clone().where('working_time_id', uid).first();
-    }
-
-    async addNew(working_time_id: string, 
-        working_time_name: string, 
-        user_email: string, 
-        status: boolean, 
-        check_in: string,
-        check_out: string,
-        lunchbreak_start: string,
-        lunchbreak_end: string
-        ) {
-        return await WorkingTimeModel.clone()
-            .insert({
-                working_time_id,
-                working_time_name,
-                user_email,
-                status,
-                monday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: true
-                },
-                tuesday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: true
-                },
-                wednesday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: true
-                },
-                thursday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: true
-                },
-                friday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: true
-                },
-                saturday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: false
-                },
-                sunday: {
-                    check_in: check_in,
-                    check_out: check_out,
-                    lunchbreak_start: lunchbreak_start,
-                    lunchbreak_end: lunchbreak_end,
-                    is_open: false
-                }
-
-            })
-            .returning('*');
-    }
-
-    async updateStatus(id: string, status: boolean) {
-        return await WorkingTimeModel.clone()
-            .where('working_time_id', '=', id)
-            .update({
-                status: status
-            });
-    }
-
-    async updateWorkingTimeByWorkingTimeId(editWorkingTimeInput: EditWorkingTimeInput){
-        return await WorkingTimeModel.clone()
-        .where('working_time_id', '=', editWorkingTimeInput.working_time_id)
-        .update({
-            monday: editWorkingTimeInput.monday,
-            tuesday: editWorkingTimeInput.tuesday,
-            wednesday: editWorkingTimeInput.wednesday,
-            thursday: editWorkingTimeInput.thursday,
-            friday: editWorkingTimeInput.friday,
-            saturday: editWorkingTimeInput.saturday,
-            sunday: editWorkingTimeInput.sunday
-        }).returning('*');
-
-    }
-
-
-    async updateName(id: string, working_time_name: string): Promise<boolean>{
-        return await WorkingTimeModel.clone()
-            .where('working_time_id', '=', id)
-            .update({
-                working_time_name: working_time_name
-            });
-    }
-
+  async updateName(id: string, name: string): Promise<boolean> {
+    return await WorkingTimeModel.clone().where('uid', '=', id).update({
+      name: name,
+      updatedAt: new Date(),
+    });
+  }
 }

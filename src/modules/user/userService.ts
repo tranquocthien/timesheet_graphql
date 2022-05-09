@@ -14,14 +14,18 @@ import { AuthenticationService } from '../../core/auth/authService';
 import { AuthToken } from 'src/core/typeDefs/authType';
 import { RoleService } from '../role/roleService';
 import { RoleName } from '../../core/models/roleModel';
-import { InvalidEmailError, InvalidInputError, InvalidRoleError } from '../../core/constants/errors';
+import {
+  InvalidEmailError,
+  InvalidInputError,
+  InvalidRoleError,
+} from '../../core/constants/errors';
 
 @Service()
 export class UserService {
   constructor(
     private readonly authService: AuthenticationService,
     private readonly roleService: RoleService
-  ) { }
+  ) {}
   async getAllUsers(searchUser?: SearchUser): Promise<UserType[]> {
     const hasFilter = searchUser != null;
     const limit = hasFilter ? searchUser.limit : 10;
@@ -58,14 +62,14 @@ export class UserService {
 
   async createUser(createUserInput: CreateUserInput): Promise<UserType> {
     const userRole = await this.roleService.getByName(RoleName.USER);
-    if (!userRole) throw new InvalidRoleError(ERROR_CODE.ROLE_NOT_FOUND)
+    if (!userRole) throw new InvalidRoleError(ERROR_CODE.ROLE_NOT_FOUND);
     const users = await UserModel.clone()
       .insert({
         email: createUserInput.email,
         password: createUserInput.password,
         uid: uuidv4(),
         role: userRole.uid,
-        username: createUserInput.username
+        username: createUserInput.username,
       })
       .returning('*');
     return new UserType(users[0]);
@@ -123,10 +127,10 @@ export class UserService {
       .select()
       .where('email', email)
       .first();
-    if (existingUser) throw new InvalidEmailError(ERROR_CODE.EMAIL_IS_IN_USED)
+    if (existingUser) throw new InvalidEmailError(ERROR_CODE.EMAIL_IS_IN_USED);
     const userRole = await this.roleService.getByName(RoleName.USER);
-    if (!userRole) throw new InvalidRoleError(ERROR_CODE.ROLE_NOT_FOUND)
-    const hashPassword = await this.authService.hashPassword(password)
+    if (!userRole) throw new InvalidRoleError(ERROR_CODE.ROLE_NOT_FOUND);
+    const hashPassword = await this.authService.hashPassword(password);
     const user = await UserModel.clone()
       .insert({
         email,
@@ -134,7 +138,7 @@ export class UserService {
         password: String(hashPassword),
         uid: uuidv4(),
         role: userRole.uid,
-        active: true
+        active: true,
       })
       .returning('*');
     return this.authService.createToken(user[0]);
